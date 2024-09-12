@@ -53,41 +53,107 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 40,),// bisa buat kasih jarak antar widget
             categories_section(),
             const SizedBox(height: 40,),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
+            diet_section()
+          ],
+        ),
+      );
+  }
+
+  Column diet_section() {
+    return Column(
+            children: [
+              const Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: SizedBox(
+                  width: double.infinity,
                   child: Text(
                     'Recommendation \nFor Diets',
-                    style: TextStyle(
+                      style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
+                    textAlign: TextAlign.start,
                   ),
                 ),
-                SizedBox(height: 15,),
-                Container(
-                  height: 240,
-                  color: Colors.blue,
-                  child: ListView.separated(
-                    itemBuilder: (context,index){
-                      return Container(
-                        width: 210,
-                        decoration: BoxDecoration(
-                          borderRadius : BorderRadius.circular(20),
-                          color: diets[index].boxColor,
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) => SizedBox(width: 25,),
-                    itemCount: diets.length)
-                )
-              ],
-            )
-          ],
-        ),
-      );
+              ),
+              SizedBox(height: 15,),
+              Container(
+                height: 240,
+                child: ListView.separated(
+                  itemBuilder: (context,index){
+                    return Container(
+                      width: 210,
+                      decoration: BoxDecoration(
+                        borderRadius : BorderRadius.circular(20),
+                        color: diets[index].boxColor.withOpacity(0.1),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: 80,
+                            height: 80,
+                            child: SvgPicture.asset(diets[index].iconPatch)),
+                          Column(
+                            children: [
+                              Text(
+                                diets[index].nama,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                  fontSize: 15
+                                ),
+                              ),
+                              Text(
+                            diets[index].level + ' | ' + diets[index].duration + ' | ' + diets[index].calorie,
+                            style: const TextStyle(
+                              color: Color(0xff7B6F72),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400
+                            ),
+                          ),
+                            ],
+                          ),
+                          
+                          Container(
+                            height: 45,
+                            width: 130,
+                            child: Center(
+                              child: Text(
+                                'View',
+                                style: TextStyle(
+                                  color: diets[index].viewSelected ? Colors.white : Color(0xffC58BF2),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600
+                                ),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                 diets[index].viewSelected ? Color(0xff9DCEFF) : Colors.transparent,
+                                 diets[index].viewSelected ? Color(0xff92A3FD) : Colors.transparent,
+                                ]
+                              ),
+                              borderRadius: BorderRadius.circular(50)
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) => SizedBox(width: 25,),
+                  itemCount: diets.length,
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.only(//buat kasih jarak box recomendasi dari layar
+                    left: 20,
+                    right: 20
+                  ),
+                  ),
+              )
+            ],
+          );
   }
 
   // Defines a method that returns a Column widget for displaying categories
@@ -95,14 +161,20 @@ Column categories_section() {
   return Column(
     children: [
       // Padding widget to add space around the 'Category' text
-      const Padding(
+       const Padding(
         padding: EdgeInsets.only(left: 20), // Adds padding only on the left
-        child: Text(
-          'Category', // The text displayed
-          style: TextStyle(
-            color: Colors.black, // Sets the text color to black
-            fontSize: 18, // Sets the font size to 18
-            fontWeight: FontWeight.w600, // Sets the font weight to semi-bold
+        child: SizedBox(//dipake biar bisa setting width dan text align
+          width: double.infinity, // Menyebabkan Text mengambil seluruh lebar yang tersedia,
+                        // sehingga textAlign bisa bekerja. Tanpa ini, Text hanya 
+                        // mengambil lebar sesuai dengan isinya, jadi textAlign tidak berfungsi. // Makes the width of the container fill the parent
+          child: Text(
+            'Category', // The text displayed
+            style: TextStyle(
+              color: Colors.black, // Sets the text color to black
+              fontSize: 18, // Sets the font size to 18
+              fontWeight: FontWeight.w600, // Sets the background color to yellow
+            ),
+            textAlign: TextAlign.left, // Aligns the text to the left
           ),
         ),
       ),
@@ -114,7 +186,7 @@ Column categories_section() {
           scrollDirection: Axis.horizontal, // Makes the list scroll horizontally
           itemCount: categories.length, // The number of items in the list, determined by the length of the categories list
           separatorBuilder: (context, index) => const SizedBox(width: 25), // Adds space between items in the list
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             left: 20, // Adds padding on the left side of the list
             right: 20, // Adds padding on the right side of the list
           ),
